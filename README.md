@@ -1,21 +1,18 @@
-# Reinforcement Learning from Prior Data (RLPD)
+# SAC-JAX
 
-Sample-efficient offline/online imitation learning from sparse rewards leveraging prior data based on ["Efficient Online Reinforcement Learning with Offline Data
-(ICML 2023)"](https://arxiv.org/abs/2302.02948). Code adapted from https://github.com/ikostrikov/rlpd
-
-RLPD leverages prior collected trajectory data (expert and non-expert work) and trains on the prior data while collecting online data to sample efficiently learn a policy to solve a task with just sparse rewards.
+Soft Actor-Critic implemented in JAX, adapted from [Maniskill](https://github.com/haosulab/ManiSkill) and [RFCL](https://github.com/StoneT2000/rfcl.git)'s SAC. Currently, it works for Maniskill tasks, and the gpu vectorization isn't really working. However, it solves PushCube-v1 in 10 minutes, which is really fast for SAC.
 
 ## Installation
 
-To get started run `git clone https://github.com/StoneT2000/rfcl.git rlpd_jax --branch ms3-gpu` which contains the code for RLPD written in jax (a partial fork of the original RLPD and JaxRL repos that has been optimized to run faster and support vectorized environments).
+To get started run `git clone https://github.com/StoneT2000/rfcl.git sac_jax --branch ms3-gpu` which contains the code for RLPD written in jax (a partial fork of the original RLPD and JaxRL repos that has been optimized to run faster and support vectorized environments).
 
 We recommend using conda/mamba and you can install the dependencies as so:
 
 ```bash
-conda create -n "rlpd_ms3" "python==3.9"
-conda activate rlpd_ms3
+conda create -n "sac_jax" "python==3.9"
+conda activate sac_jax
 pip install --upgrade "jax[cuda12_pip]==0.4.28" -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
-pip install -e rlpd_jax
+pip install -e sac_jax
 ```
 
 Then you can install ManiSkill and its dependencies
@@ -25,28 +22,6 @@ pip install mani_skill torch==2.3.1
 ```
 Note that since jax and torch are used, we recommend installing the specific versions detailed in the commands above as those are tested to work together.
 
-## Download and Process Dataset
-
-Download demonstrations for a desired task e.g. PickCube-v1
-```bash
-python -m mani_skill.utils.download_demo "PickCube-v1"
-```
-
-<!-- TODO (stao): note how this part can be optional if user wants to do action free learning -->
-Process the demonstrations in preparation for the learning workflow. RLPD works well for harder tasks if sufficient data is provided and the data itself is not too multi-modal. Hence we will use the RL generated trajectories (lot of data and not multi-modal so much easier to learn) for the example below:
-
-
-The preprocessing step here simply replays all trajectories by environment state (so the exact same trajectory is returned) and save the state observations to train on. Moreover failed demos are also saved as RLPD can learn from sub-optimal data as well.
-
-```bash
-env_id="PickCube-v1"
-python -m mani_skill.trajectory.replay_trajectory \
-  --traj-path ~/.maniskill/demos/${env_id}/rl/trajectory.h5 \
-  --use-env-state --allow-failure \
-  -c pd_joint_delta_pos -o state \
-  --save-traj --num-procs 4
-```
-
 ## Train
 
 To train with environment vectorization run
@@ -54,13 +29,13 @@ To train with environment vectorization run
 ```bash
 env_id=PushCube-v1
 seed=42
-XLA_PYTHON_CLIENT_PREALLOCATE=false python train_sac.py configs/base_rlpd_ms3.yml \
+XLA_PYTHON_CLIENT_PREALLOCATE=false python train_sac.py configs/base_sac_ms3.yml \
   logger.exp_name="sac-${env_id}-state-${seed}-walltime_efficient" \
-  seed=${seed} train.steps=200_000 env.env_id=${env_id} \
+  seed=${seed} train.steps=200_000 env.env_id=${env_id} env.num_envs=32 \
   logger.wandb=True logger.project_name="sac_jax" logger.wandb_cfg.group=${env_id}
 ```
 
-This should solve the PickCube-v1 task in a few minutes, but won't get good sample efficiency.
+<!-- This should solve the PickCube-v1 task in a few minutes, but won't get good sample efficiency.
 
 For sample-efficient settings you can use the sample-efficient configurations stored in configs/base_rlpd_ms3_sample_efficient.yml (no env parallelization, more critics, higher update-to-data ratio). This will take less environment samples (around 50K to solve) but runs slower.
 
@@ -73,11 +48,11 @@ XLA_PYTHON_CLIENT_PREALLOCATE=false python train_ms3.py configs/base_rlpd_ms3_sa
   seed=${seed} train.num_demos=${demos} train.steps=100_000 \
   env.env_id=${env_id} \
   train.dataset_path="~/.maniskill/demos/${env_id}/rl/trajectory.state.pd_joint_delta_pos.h5"
-```
+``` -->
 
 evaluation videos are saved to `exps/<exp_name>/videos`.
 
-## Generating Demonstrations / Evaluating policies
+<!-- ## Generating Demonstrations / Evaluating policies
 
 To generate 1000 demonstrations you can run
 
@@ -95,4 +70,4 @@ python -m mani_skill.trajectory.replay_trajectory \
 
 The replay_trajectory tool can also be used to generate videos
 
-See the rlpd_jax/scripts/collect_demos.py code for details on how to load the saved policies and modify it to your needs.
+See the rlpd_jax/scripts/collect_demos.py code for details on how to load the saved policies and modify it to your needs. -->

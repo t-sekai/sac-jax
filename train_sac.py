@@ -16,14 +16,14 @@ import numpy as np
 import optax
 from omegaconf import OmegaConf
 
-from rlpd_jax.rfcl.agents.sac import SAC, ActorCritic, SACConfig
-from rlpd_jax.rfcl.agents.sac.networks import DiagGaussianActor
-from rlpd_jax.rfcl.data.dataset import ReplayDataset
-from rlpd_jax.rfcl.envs.make_env import EnvConfig, make_env_from_cfg
-from rlpd_jax.rfcl.logger import LoggerConfig
-from rlpd_jax.rfcl.models import NetworkConfig, build_network_from_cfg
-from rlpd_jax.rfcl.utils.parse import parse_cfg
-from rlpd_jax.rfcl.utils.spaces import get_action_dim
+from rfcl.agents.sac import SAC, ActorCritic, SACConfig
+from rfcl.agents.sac.networks import DiagGaussianActor
+from rfcl.data.dataset import ReplayDataset
+from rfcl.envs.make_env import EnvConfig, make_env_from_cfg
+from rfcl.logger import LoggerConfig
+from rfcl.models import NetworkConfig, build_network_from_cfg
+from rfcl.utils.parse import parse_cfg
+from rfcl.utils.spaces import get_action_dim
 
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "2"
