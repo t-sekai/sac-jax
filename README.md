@@ -1,10 +1,10 @@
 # SAC-JAX
 
-Soft Actor-Critic implemented in JAX, adapted from [Maniskill](https://github.com/haosulab/ManiSkill) and [RFCL](https://github.com/StoneT2000/rfcl.git)'s SAC. Currently, it works for Maniskill tasks, and the gpu vectorization isn't really working. However, it solves PushCube-v1 in 10 minutes, which is really fast for SAC.
+Soft Actor-Critic implemented in JAX, adapted from [Maniskill](https://github.com/haosulab/ManiSkill) and [RFCL](https://github.com/StoneT2000/rfcl.git)'s SAC. Currently, it works for Maniskill tasks, and it solves PushCube-v1 in 2 minutes, which is lightning fast for SAC.
 
 ## Installation
 
-To get started run `git clone https://github.com/StoneT2000/rfcl.git sac_jax --branch ms3-gpu` which contains the code for RLPD written in jax (a partial fork of the original RLPD and JaxRL repos that has been optimized to run faster and support vectorized environments).
+To get started run `git clone https://github.com/t-sekai/rfcl.git sac_jax --branch ms3-gpu` which contains the code for RLPD written in jax (a partial fork of the original RLPD and JaxRL repos that has been optimized to run faster and support vectorized environments).
 
 We recommend using conda/mamba and you can install the dependencies as so:
 
